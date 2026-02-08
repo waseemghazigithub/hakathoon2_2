@@ -1,0 +1,63 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+*.pyo
+*.pyc
+build/
+dist/
+wheels/
+*.egg-info
+*.egg
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Alembic
+alembic/versions/__pycache__/
+
+# Node / Frontend
+node_modules/
+.next/
+out/
+build/
+.vercel
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.seed
+*.log
