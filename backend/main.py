@@ -51,6 +51,7 @@ app = FastAPI(
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
+    openapi_url="/openapi.json"
 )
 
 # Test route to verify docs update
@@ -66,10 +67,10 @@ app.include_router(auth_router)
 # Configure CORS middleware (FR-012)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url],  # Frontend URL from environment
-    allow_credentials=True,  # Allow cookies and Authorization header
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "Accept"],
+    allow_origins=["*"],  # Temporarily allow all for debugging docs
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
