@@ -12,7 +12,7 @@ const getToken = (): string | null => {
   return null;
 };
 
-// Utility function to create headers with JWT
+// Utility function to create headers with JWT test
 const getAuthHeaders = (): HeadersInit => {
   const token = getToken();
   const headers: HeadersInit = {
