@@ -3,8 +3,13 @@ export interface User {
   id: string;
   email: string;
   name?: string;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+}
+
+// Authentication state type
+export interface AuthState {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
 }
 
 // Task type definition

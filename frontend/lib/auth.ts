@@ -1,4 +1,4 @@
-import { User } from './types';
+import { User, AuthState } from './types';
 
 // Initialize Better Auth client
 // This is a simplified mock for demonstration purposes
@@ -48,11 +48,7 @@ export const getAuthToken = (): string | null => {
 };
 
 // Mock auth state context
-export interface AuthState {
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-}
+// AuthState moved to types.ts
 
 export const initialAuthState: AuthState = {
   user: null,
