@@ -69,7 +69,7 @@ export default function LoginPage() {
         setErrors({ general: response.error || 'Login failed' });
       }
     } catch (error) {
-      setErrors({ general: 'An unexpected error occurred' });
+      setErrors({ general: (error as Error).message || 'An unexpected error occurred' });
     } finally {
       setIsLoading(false);
     }

@@ -31,7 +31,11 @@ const apiRequest = async <T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> => {
-  const url = `${API_BASE_URL}${endpoint}`;
+  // Ensure we don't have double slashes if API_BASE_URL has a trailing slash
+  const base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+  const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${base}${path}`;
+  
   const config: RequestInit = {
     headers: getAuthHeaders(),
     ...options,
@@ -40,22 +44,27 @@ const apiRequest = async <T>(
   try {
     const response = await fetch(url, config);
 
-    // Handle 401 - unauthorized
     if (response.status === 401) {
-      // In a real app, this would redirect to login
       localStorage.removeItem('token');
-      window.location.href = '/auth/login';
-      throw new Error('Unauthorized - please log in again');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login';
+      }
+      throw new Error('Session expired. Please log in again.');
     }
 
+    const data = await response.json().catch(() => ({}));
+    
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      throw new Error(data.error || data.message || `Server Error: ${response.status}`);
     }
 
-    return await response.json();
+    return data;
   } catch (error) {
-    console.error(`API request failed: ${url}`, error);
+    console.error(`❌ API request failed: ${url}`, error);
+    // If it's a TypeError, it's usually a network error (like CORS or offline)
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      throw new Error('Cannot connect to the backend. Please check if the API URL is correct and backend is running.');
+    }
     throw error;
   }
 };
