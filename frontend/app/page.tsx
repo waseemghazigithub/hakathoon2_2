@@ -18,7 +18,7 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Manage Tasks with <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600">Elegance</span>
+              Manage Tasks with <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600">Maxim</span>
             </h1>
 
             <p className="text-xl text-slate-600 max-w-lg mx-auto leading-relaxed">
