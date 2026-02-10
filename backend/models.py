@@ -3,10 +3,11 @@ Database models for Task Management API.
 
 Implements FR-005 (Task model with proper indexes and constraints).
 """
+from enum import Enum
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, List, TYPE_CHECKING
 
-from sqlmodel import SQLModel, Field, Index
+from sqlmodel import SQLModel, Field, Index, Relationship
 from sqlalchemy import Column, DateTime, func
 
 
@@ -109,6 +110,58 @@ class Task(SQLModel, table=True):
         # Composite index for efficient user + completion status filtering
         Index("idx_task_user_completed", "user_id", "completed"),
     )
+
+
+class Conversation(SQLModel, table=True):
+    """
+    Conversation entity for managing AI chat sessions.
+    """
+    __tablename__ = "conversations"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: str = Field(index=True, nullable=False, max_length=255)
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    )
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+            server_default=func.now(),
+            onupdate=func.now()
+        )
+    )
+
+    # Relationships
+    messages: List["Message"] = Relationship(back_populates="conversation")
+
+
+class MessageRole(str, Enum):
+    """Message role enum for user vs assistant messages."""
+    USER = "user"
+    ASSISTANT = "assistant"
+
+
+class Message(SQLModel, table=True):
+    """
+    Message entity representing a single message in a conversation.
+    """
+    __tablename__ = "messages"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: str = Field(index=True, nullable=False, max_length=255)
+    conversation_id: int = Field(foreign_key="conversations.id", nullable=False, index=True)
+    role: MessageRole = Field(nullable=False)
+    content: str = Field(nullable=False)
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column=Column(DateTime(timezone=True), nullable=False, server_default=func.now(), index=True)
+    )
+
+    # Relationships
+    conversation: "Conversation" = Relationship(back_populates="messages")
 
 
 """

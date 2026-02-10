@@ -43,6 +43,20 @@ class Settings(BaseSettings):
         description="Deployment environment"
     )
 
+    # OpenAI Configuration
+    openai_api_key: str = Field(
+        ...,
+        description="OpenAI API Key for Agent"
+    )
+    openai_model: str = Field(
+        default="gpt-4o-mini",
+        description="OpenAI model to use"
+    )
+    openai_max_tokens: int = Field(
+        default=4000,
+        description="Max tokens for OpenAI response"
+    )
+
     @field_validator("database_url")
     @classmethod
     def validate_database_url(cls, v: str) -> str:

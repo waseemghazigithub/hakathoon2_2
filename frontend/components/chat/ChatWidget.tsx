@@ -3,11 +3,10 @@ import { sendChatMessage } from './chatApi';
 import { Message, ChatState } from './types';
 
 interface ChatWidgetProps {
-    userId: string;
     token: string;
 }
 
-export const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, token }) => {
+export const ChatWidget: React.FC<ChatWidgetProps> = ({ token }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [state, setState] = useState<ChatState>({
         messages: [],
@@ -46,8 +45,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, token }) => {
 
         try {
             const response = await sendChatMessage(
-                userId,
-                { message: userMessage.content }, // conversation_id could be managed here
+                { message: userMessage.content },
                 token
             );
 
@@ -77,16 +75,20 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, token }) => {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition-colors"
+                    className="bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                 >
-                    Chat
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" /></svg>
+                    AI Chat
                 </button>
             )}
 
             {isOpen && (
                 <div className="bg-white rounded-lg shadow-xl w-80 sm:w-96 flex flex-col h-[500px] border border-gray-200">
                     <div className="p-4 bg-blue-600 text-white rounded-t-lg flex justify-between items-center">
-                        <h3 className="font-semibold">Todo Assistant</h3>
+                        <div className="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
+                            <h3 className="font-semibold">Todo Assistant</h3>
+                        </div>
                         <button
                             onClick={() => setIsOpen(false)}
                             className="text-white hover:text-gray-200"
@@ -96,6 +98,12 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, token }) => {
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {state.messages.length === 0 && (
+                            <div className="text-center text-gray-500 mt-10">
+                                <p>Hi! How can I help you today?</p>
+                                <p className="text-xs mt-2">Try: "Add a task to buy groceries"</p>
+                            </div>
+                        )}
                         {state.messages.map((msg) => (
                             <div
                                 key={msg.id}
@@ -104,8 +112,8 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ userId, token }) => {
                             >
                                 <div
                                     className={`max-w-[80%] rounded-lg p-3 ${msg.role === 'user'
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-800'
+                                        ? 'bg-blue-600 text-white'
+                                        : 'bg-gray-100 text-gray-800'
                                         }`}
                                 >
                                     <p className="whitespace-pre-wrap text-sm">{msg.content}</p>

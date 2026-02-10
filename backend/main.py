@@ -15,6 +15,7 @@ from core.config import settings
 from db import dispose_engine, create_db_and_tables
 from routes.tasks import router as tasks_router
 from routes.auth import router as auth_router
+from routes.chat import router as chat_router
 
 
 @asynccontextmanager
@@ -62,6 +63,7 @@ async def test_docs():
 # Register routes
 app.include_router(tasks_router)
 app.include_router(auth_router)
+app.include_router(chat_router)
 
 
 # Configure CORS middleware (FR-012)

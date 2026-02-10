@@ -3,11 +3,10 @@ import { ChatRequest, ChatResponse } from './types';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
 export const sendChatMessage = async (
-    userId: string,
     request: ChatRequest,
     token: string
 ): Promise<ChatResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/${userId}/chat`, {
+    const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
